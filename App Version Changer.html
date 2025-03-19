@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Version Changer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: calc(100% - 12px); /* Adjust for padding */
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Preserve formatting */
+        }
+
+        .advanced-options {
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+            padding-top: 10px;
+        }
+
+        .advanced-options h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>App Version Changer</h2>
+        <div class="form-group">
+            <label for="versionName">Version Name:</label>
+            <input type="text" id="versionName" placeholder="e.g., 1.2.3">
+        </div>
+        <div class="form-group">
+            <label for="versionCode">Version Code:</label>
+            <input type="number" id="versionCode" placeholder="e.g., 123">
+        </div>
+        <div class="form-group">
+            <button onclick="changeVersion()">Change Version</button>
+        </div>
+        <div id="result"></div>
+
+        <div class="advanced-options">
+            <h3>Advanced Options</h3>
+            <div class="form-group">
+                <label for="buildGradleContent">Build.gradle (Module:app) Content:</label>
+                <textarea id="buildGradleContent" style="width: calc(100% - 12px); padding: 6px; border: 1px solid #ccc; border-radius: 4px; height: 150px;" placeholder="Paste your build.gradle content here"></textarea>
+            </div>
+            <div class="form-group">
+                <button onclick="updateGradle()">Update Gradle Content</button>
+            </div>
+            <div id="gradleResult"></div>
+        </div>
+    </div>
+
+    <script>
+        function changeVersion() {
+            const versionName = document.getElementById('versionName').value;
+            const versionCode = document.getElementById('versionCode').value;
+
+            if (!versionName || !versionCode) {
+                document.getElementById('result').textContent = "Please enter both Version Name and Version Code.";
+                return;
+            }
+
+            const resultText = `Version Name: ${versionName}\nVersion Code: ${versionCode}`;
+            document.getElementById('result').textContent = resultText;
+        }
+
+        function updateGradle() {
+            const gradleContent = document.getElementById('buildGradleContent').value;
+            const versionName = document.getElementById('versionName').value;
+            const versionCode = document.getElementById('versionCode').value;
+
+            if (!gradleContent) {
+                document.getElementById('gradleResult').textContent = "Please paste your build.gradle content.";
+                return;
+            }
+
+            if (!versionName || !versionCode) {
+                document.getElementById('gradleResult').textContent = "Please enter Version Name and Version Code above.";
+                return;
+            }
+
+            // Simple regex replacements (may need refinement for complex gradle files)
+            let updatedGradleContent = gradleContent.replace(/versionName\s+"[^"]+"/g, `versionName "${versionName}"`);
+            updatedGradleContent = updatedGradleContent.replace(/versionCode\s+\d+/g, `versionCode ${versionCode}`);
+
+            document.getElementById('gradleResult').textContent = updatedGradleContent;
+        }
+    </script>
+</body>
+</html>
